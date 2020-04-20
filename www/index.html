@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, user-scalable=no" />
-    <title>ZIM - Code Creativity</title>
+    <title>Grower</title>
 </head>
 
 <body>
@@ -11,7 +11,340 @@
     <script src="https://zimjs.org/cdn/10.9.0/zim.js"></script>
     <script src="https://unpkg.com/zdog@1/dist/zdog.dist.min.js"></script>
 
-    <script src="main.js"></script>
+    <script>
+    const scaling = "full"; // this will resize to fit inside the screen dimensions
+    const width = null;
+    const height = null;
+    const color = light; // ZIM colors like green, blue, pink, faint, clear, etc.
+    const outerColor = dark; // any HTML colors like "violet", "#333", etc. are fine to use
+    const assets = ["plant1-pot.png", "plant-stage1.png", "plant-stage2.png", "plant-stage3.png", "plant1-stage4.png", "seed1.png", "water-drop.png"];
+    const path = "images/";
+
+    const frame = new Frame(scaling, width, height, color, outerColor, assets, path);
+    frame.on("ready", () => { // ES6 Arrow Function - like function(){}
+        zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+        const stage = frame.stage;
+        let stageW = frame.width;
+        let stageH = frame.height;
+
+        // ---- PAGE1 ----
+        const page1 = new Container(stageW, stageH);
+
+        page1.backing = new Rectangle(page1.width, page1.height, light).center(page1);
+        
+        //HEADER
+        const header = new Container(300, 30).pos(0, 0, CENTER, TOP, page1);
+        new Rectangle({
+            width: header.width,
+            height: header.height,
+            color: '#636',
+            corner: 10
+        }).addTo(header);
+        
+        new Label({
+            text:"Choose a seed",
+            color: white,
+            size: 18
+        }).center(header);
+
+        //CONTENT
+        page1.content = new Container(400, 500).addTo(page1);
+
+        const seed1 = frame.asset("seed1.png").center(page1.content)
+
+        page1.button1 = new Button({
+            width:70,
+            height: 40,
+            label:"SELECT",
+        }).pos(20, 0, RIGHT, CENTER, page1.content)
+        page1.button1.label.size = 16
+
+        //FOOTER
+        const footer = new Container(300, 30).center(page1)
+        const footerText = new Label({
+            text:"Copyright 2020",
+            color: black,
+            size:16
+        }).center(footer)
+
+        //LAYOUT
+        const layout = new Layout(page1,[
+            {object:header, height:10, marginTop:5, valign:CENTER, align:CENTER, maxWidth:80},
+            {object:page1.content, marginTop:10, align:CENTER},
+            // {object:page1.button1, align:RIGHT},
+            {object:footer, marginTop:5, maxWidth:50, backgroundColor: white}
+        ], 5, light, true, new Shape(), stage);
+
+        const manager = new LayoutManager()
+        manager.add(layout);
+        manager.dispose();
+
+
+        //---- PAGE2 ----
+        const page2 = new Container(stageW, stageH);
+        page2.backing = new Rectangle(page2.width, page2.height, white).addTo(page2);
+
+        page2.backButton = new Button({
+            width:50,
+            height:40,
+            label:"back",
+            backgroundColor:light,
+            color:black
+        }).pos(20, 20, LEFT, TOP, page2)
+
+        page2.backButton.label.size = 16
+
+        //HEADER
+
+        const header2 = new Container(300, 30).pos(0, 0, CENTER, TOP, page2);
+        new Rectangle({
+            width: header2.width,
+            height: header2.height,
+            color: '#636',
+            corner: 10
+        }).addTo(header2);
+        
+        new Label({
+            text:"Grow the seed!",
+            color: white,
+            size: 18
+        }).center(header2);
+
+        var instructions = new Label({
+            text:"Instructions: water, sun, sun, water",
+            size:16,
+            color:black
+        }).centerReg(header2).mov(0, 50)//pos(0, 50, CENTER, TOP, header2)
+
+        //CONTENT
+        const content = new Container(400, 500).addTo(page2);
+        const waterButton = new Button({
+            width:100,
+            height:40,
+            label:"water",
+            backgroundColor:blue,
+            color:black
+        }).pos(-100, -200, CENTER, CENTER, content)
+
+        const sunButton = new Button({
+            width:100,
+            height:40,
+            label:"sun",
+            backgroundColor:yellow,
+            color:black
+        }).pos(100, -200, CENTER, CENTER, content)
+
+        waterButton.label.size = 18
+        sunButton.label.size = 18
+
+        //FOOTER
+        const footer2 = new Container(300, 30).center(page2)
+        new Label({
+            text:"Copyright 2020",
+            color: black,
+            size:16
+        }).center(footer2)
+
+        //LAYOUT
+        const layout2 = new Layout(page2,[
+            {object:header2, height:10, marginTop:5, valign:CENTER, align:CENTER, maxWidth:80},
+            {object:content, marginTop:10, align:CENTER},
+            // {object:page1.button1, align:RIGHT},
+            {object:footer2, marginTop:5, maxWidth:50, backgroundColor: white}
+        ], 5, light, true, new Shape(), stage);
+
+        const manager2 = new LayoutManager()
+        manager2.add(layout2);
+        manager2.dispose();
+
+        
+        //---- PAGES -----
+        const pages = new Pages([
+            {page:page1, swipe:[page2, "help", "help"]},
+            {page:page2, swipe:[page1, "help", "help"]},
+
+        ], "slide", 700).addTo();
+
+        pages.on("help", ()=>{
+            if (pages.page == page2) {
+                zog("helping");
+            } else {
+                zog("helping");
+            }        
+        })
+
+        //---- Button Nav ----
+        page2.backButton.on("mousedown", () => {
+            instructions.text="Instructions: water, sun, sun, water"
+            plantStage1.removeFrom(); 
+            plantStage2.removeFrom(); 
+            plantStage3.removeFrom();   
+            plant1Stage4.removeFrom();
+            growthFactor = 0
+            stage.update()
+
+            pages.go(page1, "left");
+        });
+
+        var plant1Pot = frame.asset("plant1-pot.png");
+        var plantStage1 = frame.asset("plant-stage1.png");
+        var plantStage2 = frame.asset("plant-stage2.png");
+        var plantStage3 = frame.asset("plant-stage3.png");
+        var plant1Stage4 = frame.asset("plant1-stage4.png");
+        var waterDrop = frame.asset("water-drop.png");
+
+        var tryAgain = new Button({
+            width:100,
+            height:40,
+            label: "Try Again",
+            backgroundColor:green,
+            color:black
+        })
+        tryAgain.label.size = 14
+
+        var selectedSeed = 0
+        page1.button1.on("mousedown", (e)=>{
+            selectedSeed = 1
+            zog(selectedSeed)
+            zog("seed1")
+            pages.go(page2, "right");
+            zog(selectedSeed)
+
+            if(selectedSeed == 1){
+                // zog("im a plant")
+                plant1Pot.pos(0, 100, CENTER, BOTTOM, content);
+                stage.update()
+            }
+        })        
+
+        var growthFactor = 0
+        waterButton.on("click", (e)=>{
+            sunButton.alpha = 0;
+            waterButton.alpha = 0;
+            growthFactor ++
+            const waterEmitter = new Emitter({
+                obj: waterDrop.sca(0.2),
+                cache:mobile(),
+                life: 700,
+                force: 1,
+            })
+            .pos(0, -150, CENTER, CENTER, content)
+            .animate({
+                props:{y: stageH/3, alpha:0},
+                time: 700,
+                call: function(){
+                    waterEmitter.dispose()
+                    if(growthFactor == 1){
+                        tryAgain.removeFrom()
+                        plant1Pot.removeFrom(content)
+                        plantStage1.pos(0, 100, CENTER, BOTTOM, content);
+                        stage.update()
+
+                    }else if(growthFactor == 4){
+                        plantStage3.removeFrom(content)
+                        plant1Stage4.pos(0, 100, CENTER, BOTTOM, content);   
+                        instructions.text="It's a rosemary!"  
+                        sunButton.alpha = 0;
+                        waterButton.alpha = 0;
+                           
+                    }else{
+                        plantStage1.removeFrom(content)
+                        plantStage2.removeFrom(content)
+                        plantStage3.removeFrom(content)
+
+                        plant1Pot.pos(0, 100, CENTER, BOTTOM, content);
+
+                        instructions.text="Try again"
+                        tryAgain.pos(100, 50, CENTER, BOTTOM, content)
+                        stage.update()
+                    }
+                    sunButton.alpha = 1;
+                    waterButton.alpha = 1;
+                }
+            })
+        })
+
+        sunButton.on("click", (e)=>{
+            sunButton.alpha = 0;
+            waterButton.alpha = 0;
+            zog("sun")
+            growthFactor ++
+            const sun = new Circle({
+                color:yellow
+            })
+            .pos(0, -100, CENTER, CENTER, content)
+            
+            const sunClone = sun
+            .clone()
+            .pos(0, -100, CENTER, CENTER, content)
+            .animate({
+                props:{radius: 100, alpha: 0.5},
+                rewind:true,
+                time: 800,
+                call: function(){
+                    sun.removeFrom(content)
+                    sunClone.removeFrom(content)
+                    if(growthFactor == 2){
+                        plantStage1.removeFrom(content)
+                        plantStage2.pos(0, 100, CENTER, BOTTOM, content);
+                        zog(growthFactor)
+                    }else if(growthFactor == 3){
+                        plantStage2.removeFrom(content)
+                        plantStage3.pos(0, 100, CENTER, BOTTOM, content);        
+                        zog(growthFactor)
+                    }else{
+                        plantStage1.removeFrom(content)
+                        plantStage2.removeFrom(content)
+                        plantStage3.removeFrom(content)
+
+                        plant1Pot.pos(0, 100, CENTER, BOTTOM, content);
+
+                        instructions.text="Try again"
+                        tryAgain.pos(100, 50, CENTER, BOTTOM, content)
+                        stage.update()
+
+                    }
+                    sunButton.alpha = 1;
+                    waterButton.alpha = 1;
+                }
+            })
+
+        })
+
+        tryAgain.on("click", (e)=>{
+            instructions.text="Instructions: water, sun, sun, water"
+            plantStage1.removeFrom(); 
+            plantStage2.removeFrom(); 
+            plantStage3.removeFrom();   
+            plant1Stage4.removeFrom();
+            sunButton.alpha = 0;   
+
+            growthFactor = 0
+            stage.update()
+        })
+
+
+        //---- RESIZE/RESPONSIVE ----
+        frame.on("resize", () => {
+            stageW = frame.width;
+            stageH = frame.height; 
+
+            page1.setBounds(stageW, stageH);
+            page1.backing.siz(stageW, stageH);
+            
+            page2.setBounds(stageW, stageH);
+            page2.backing.siz(stageW, stageH);
+
+            manager.resize();  
+            // pages.resize()
+        });
+
+        stage.update(); // this is needed to show any changes
+
+    }); // end of ready
+
+    </script>
 
 
 <!-- canvas with id="myCanvas" is made by zim Frame -->
