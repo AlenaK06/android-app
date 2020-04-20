@@ -46,7 +46,7 @@
 	<!-- https://github.com/phonegap/phonegap/wiki/App-Icon-Sizes -->
 	<!-- http://docs.build.phonegap.com/en_US/configuring_icons_and_splash.md.html#Icons%20and%20Splash%20Screens -->
 
-	<icon src="icon.png" width="57" height="57" />
+	<icon src="icon/icon.png" width="57" height="57" />
 
 	<platform name="ios">
 
@@ -98,15 +98,6 @@
 		<icon src="icon/android/xhdpi.png" width="96" height="96" qualifier="xhdpi" />
 		<icon src="icon/android/xxhdpi.png" width="144" height="144" qualifier="xxhdpi" />
 		<icon src="icon/android/xxxhdpi.png" width="192" height="192" qualifier="xxxhdpi" />
-	</platform>
-
-	<platform name="winphone">
-		<icon src="icon/winphone/icon.png" width="48" height="48" />
-		<icon src="icon/winphone/tileicon.png" width="173" height="173" role="background" />
-	</platform>
-
-   	<platform name="blackberry"><!-- probably not supported at this time in Build -->
-    	<icon src="icon/blackberry/icon-80.png" width="80" height="80" />
 	</platform>
 
     <!-- Define app splash screen for each platform. -->
