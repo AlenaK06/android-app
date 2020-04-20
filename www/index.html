@@ -235,6 +235,9 @@
                 time: 700,
                 call: function(){
                     waterEmitter.dispose()
+                    sunButton.alpha = 1;
+                    waterButton.alpha = 1;
+
                     if(growthFactor == 1){
                         tryAgain.removeFrom()
                         plant1Pot.removeFrom(content)
@@ -257,10 +260,11 @@
 
                         instructions.text="Try again"
                         tryAgain.pos(100, 50, CENTER, BOTTOM, content)
+                        sunButton.alpha = 0;
+                        waterButton.alpha = 0;
+
                         stage.update()
                     }
-                    sunButton.alpha = 1;
-                    waterButton.alpha = 1;
                 }
             })
         })
@@ -285,6 +289,9 @@
                 call: function(){
                     sun.removeFrom(content)
                     sunClone.removeFrom(content)
+                    sunButton.alpha = 1;
+                    waterButton.alpha = 1;
+
                     if(growthFactor == 2){
                         plantStage1.removeFrom(content)
                         plantStage2.pos(0, 100, CENTER, BOTTOM, content);
@@ -302,11 +309,12 @@
 
                         instructions.text="Try again"
                         tryAgain.pos(100, 50, CENTER, BOTTOM, content)
+                        sunButton.alpha = 0;
+                        waterButton.alpha = 0;
+
                         stage.update()
 
                     }
-                    sunButton.alpha = 1;
-                    waterButton.alpha = 1;
                 }
             })
 
@@ -318,8 +326,9 @@
             plantStage2.removeFrom(); 
             plantStage3.removeFrom();   
             plant1Stage4.removeFrom();
-            sunButton.alpha = 0;   
-
+            sunButton.alpha = 0; 
+            waterButton.alpha = 1;   
+            
             growthFactor = 0
             stage.update()
         })
